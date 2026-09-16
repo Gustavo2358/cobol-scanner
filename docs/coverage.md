@@ -4,7 +4,7 @@
 |---|---|
 | CLI, JSON schema 1, JAR | implementado W0 |
 | Normalização/COPY | implementado W1; fixed/free, continuação fixed, COPY aninhado/REPLACING |
-| CALL/CICS | planejado W2 |
+| CALL/CICS | implementado W2; literal ou variável unresolved |
 | VALUE/MOVE/resolver | planejado W3 |
 | ASSIGN/SQL INCLUDE | planejado W4 |
 | Tabelas SQL | planejado W5 |
