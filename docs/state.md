@@ -1,5 +1,5 @@
-Current checkpoint: W3 complete.
-Completed: W0–W3; mvn clean verify green (16 tests).
-Next: W4 structural dependencies.
-Known limits: external writers remain incomplete; no control flow by design.
-Last green commit: cd6b920; W3 is this checkpoint commit.
+Current checkpoint: W4 complete.
+Completed: W0–W4; mvn clean verify green (21 tests).
+Next: W5 SQL table scanner and MVP tag.
+Known limits: unresolved includes retain names and mark PARTIAL.
+Last green commit: 04c4670; W4 is this checkpoint commit.

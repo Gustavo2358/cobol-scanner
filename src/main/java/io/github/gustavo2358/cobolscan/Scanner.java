@@ -7,6 +7,7 @@ public final class Scanner {
     public ScanResult scan(Path source, String label) {
         ScanResult r = new ScanResult(label);
         try { var tokens = new io.github.gustavo2358.cobolscan.source.SourcePreparation(options).prepare(source, r);
+            new io.github.gustavo2358.cobolscan.extract.FileScanner().scan(tokens, r);
             var sinks = new io.github.gustavo2358.cobolscan.scan.IslandScanner().scan(tokens, r);
             var facts = new io.github.gustavo2358.cobolscan.scan.FactScanner().scan(tokens);
             var resolver = new io.github.gustavo2358.cobolscan.resolve.ValueResolver(facts);

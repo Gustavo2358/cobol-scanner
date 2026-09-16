@@ -11,7 +11,7 @@ public final class FactScanner {
             if(t.is("EXEC")) { while(i<ts.size() && !ts.get(i).is("END-EXEC")) i++; continue; }
             if(t.is("PROCEDURE")) { procedure=true; declaration=null; }
             if(t.is(".")) declaration=null;
-            if(!procedure && t.kind()==Token.Kind.NUMBER && i+1<ts.size() && ts.get(i+1).kind()==Token.Kind.WORD && (i==0 || ts.get(i-1).line()<t.line() || ts.get(i-1).is("."))) {
+            if(!procedure && t.kind()==Token.Kind.NUMBER && i+1<ts.size() && ts.get(i+1).kind()==Token.Kind.WORD && (i==0 || ts.get(i-1).line()<t.line() || ts.get(i-1).is(".") || ts.get(i-1).is("END-EXEC"))) {
                 int level; try { level=Integer.parseInt(t.value()); } catch(NumberFormatException e) { continue; }
                 if(level>=1 && level<=49 || level==77) declaration=ts.get(i+1).upper();
                 else if(level==88 || level==66) declaration=null;

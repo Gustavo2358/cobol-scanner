@@ -20,6 +20,29 @@ public final class SourcePreparation {
             for (int i = 0; i < tokens.size(); i++) {
                 Token t = tokens.get(i);
                 if (t.kind() == Token.Kind.INVALID) result.partial("Malformed token near line " + t.line());
+                if (t.is("EXEC") && i+3<tokens.size() && tokens.get(i+1).is("SQL") && tokens.get(i+2).is("INCLUDE")) {
+                    Token member=tokens.get(i+3); result.sqlIncludes.add(member.upper());
+                    int end=i+4; while(end<tokens.size() && !tokens.get(end).is("END-EXEC")) end++;
+                    out.addAll(tokens.subList(i,Math.min(end+1,tokens.size())));
+                    if (!Set.of("SQLCA","SQLDA").contains(member.upper())) {
+                        List<Path> roots=new ArrayList<>(options.sqlDirs); roots.addAll(options.dclgenDirs);
+                        Path include=find(member.value(),roots,path.getParent());
+                        if(include==null) result.partial("SQL INCLUDE not found: "+member.value());
+                        else try {
+                            String raw=Files.readString(include,options.charset);
+                            List<Token> content=Lexer.lex(Normalizer.normalize(raw,options.format,result));
+                            boolean declared=false;
+                            for(int j=0;j+2<content.size();j++) if(content.get(j).is("DECLARE")) {
+                                for(int k=j+1;k<Math.min(j+8,content.size());k++) if(content.get(k).is("TABLE")) declared=true;
+                            }
+                            boolean configured=false;
+                            for(Path d : options.dclgenDirs) if(include.toRealPath().startsWith(d.toRealPath())) configured=true;
+                            if(declared || configured) result.dclgens.add(member.upper());
+                            out.addAll(expand(include.toRealPath(),List.of(),active,result));
+                        } catch(IOException e) { result.partial("SQL INCLUDE read failed: "+member.value()); }
+                    }
+                    i=end; continue;
+                }
                 if (t.is("EXEC")) exec = true;
                 if (t.is("END-EXEC")) exec = false;
                 if (t.is("REPLACE") && !exec) result.partial("Top-level REPLACE unsupported");
