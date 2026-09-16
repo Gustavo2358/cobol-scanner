@@ -20,24 +20,52 @@ public final class FactScanner {
                 int v=i+1; if(v<ts.size() && (ts.get(v).is("IS") || ts.get(v).is("ARE"))) v++;
                 facts.add(declaration,Operands.read(ts,v).value());
             }
+            if(t.is("REDEFINES") && declaration!=null && !declaration.equals("FILLER")) {
+                var alias=Operands.read(ts,i+1);
+                if(alias.value() instanceof Value.Ref ref) { facts.add(declaration,ref); facts.add(ref.name(),new Value.Ref(declaration)); }
+            }
+            if(t.is("STRING")) string(ts,i+1,facts);
             if(t.is("MOVE")) {
                 var src=Operands.read(ts,i+1); int to=src.next();
                 if(to<ts.size() && ts.get(to).is("TO")) {
                     for(int j=to+1;j<ts.size() && isReceiver(ts.get(j));) {
-                        var dest=Operands.read(ts,j); if(dest.value() instanceof Value.Ref ref) facts.add(ref.name(),src.value()); j=dest.next();
+                        var dest=Operands.read(ts,j); Operands.assign(facts,dest.value(),src.value()); j=dest.next();
                     }
                 }
             }
             if(t.is("ACCEPT") || t.is("COMPUTE") || t.is("INITIALIZE") || t.is("SET")) {
-                var dest=Operands.read(ts,i+1); if(dest.value() instanceof Value.Ref ref) facts.add(ref.name(),new Value.Unknown(t.upper()));
+                var dest=Operands.read(ts,i+1); Operands.assign(facts,dest.value(),new Value.Unknown(t.upper()));
             }
             if(t.is("READ")) {
                 int j=i+2; if(j<ts.size() && ts.get(j).is("INTO")) {
-                    var dest=Operands.read(ts,j+1); if(dest.value() instanceof Value.Ref ref) facts.add(ref.name(),new Value.Unknown("READ INTO"));
+                    var dest=Operands.read(ts,j+1); Operands.assign(facts,dest.value(),new Value.Unknown("READ INTO"));
                 }
             }
         }
         return facts;
+    }
+    private void string(List<Token> ts,int start,ValueFacts facts) {
+        List<Value> parts=new ArrayList<>(); int i=start,groupStart=0;
+        while(i<ts.size() && !ts.get(i).is("INTO") && !ts.get(i).is(".") && !ts.get(i).is("END-STRING")) {
+            if(ts.get(i).is(",")) { i++; continue; }
+            if(ts.get(i).is("DELIMITED")) {
+                i++; if(i<ts.size() && ts.get(i).is("BY")) i++;
+                if(i<ts.size() && ts.get(i).is("SIZE")) i++;
+                else {
+                    var delimiter=Operands.read(ts,i); i=delimiter.next();
+                    for(int j=groupStart;j<parts.size();j++) parts.set(j,delimiter.value() instanceof Value.Literal l
+                        ? new Value.Delimited(parts.get(j),l.text()) : new Value.Unknown("Dynamic STRING delimiter"));
+                }
+                groupStart=parts.size(); continue;
+            }
+            if(BOUNDARIES.contains(ts.get(i).upper())) break;
+            var operand=Operands.read(ts,i); parts.add(operand.value()); i=operand.next();
+        }
+        if(i<ts.size() && ts.get(i).is("INTO")) {
+            var dest=Operands.read(ts,i+1); Value value=new Value.Concat(parts);
+            if(dest.next()<ts.size() && ts.get(dest.next()).is("WITH")) value=new Value.Unknown("STRING WITH POINTER");
+            Operands.assign(facts,dest.value(),value);
+        }
     }
     static boolean isReceiver(Token t) { return t.kind()==Token.Kind.WORD && !BOUNDARIES.contains(t.upper()); }
 }
