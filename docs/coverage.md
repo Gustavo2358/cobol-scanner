@@ -9,7 +9,7 @@
 | ASSIGN/SQL INCLUDE | implementado W4; includes transitivos, SQLCA/SQLDA, DCLGEN por conteúdo/diretório |
 | Tabelas SQL | implementado W5; FROM/JOIN/listas/INSERT/UPDATE/DELETE/MERGE, quoted names |
 | Hardening de referências | implementado parcialmente W6 (detalhes abaixo) |
-| Batch limitado e benchmark | planejado W7 |
+| Batch limitado e benchmark | implementado W7; workers/fila/cache limitados, métricas, proteção explícita |
 
 Entrada externa é unresolved por definição. Controle de fluxo é fora de escopo.
 

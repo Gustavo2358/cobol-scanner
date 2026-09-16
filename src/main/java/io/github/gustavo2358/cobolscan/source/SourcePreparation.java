@@ -7,15 +7,35 @@ import java.nio.file.*;
 import java.util.*;
 public final class SourcePreparation {
     private final Options options;
+    private final Map<Path,String> rawCache = new LinkedHashMap<>(16, .75f, true);
+    private long cacheBytes;
+    private static final class Budget { long bytes; }
+    private synchronized String read(Path path, boolean cache) throws IOException {
+        String found = rawCache.get(path); if (found != null) return found;
+        String raw = Files.readString(path, options.charset);
+        long weight = 2L * raw.length(), limit = Runtime.getRuntime().maxMemory() / 16;
+        if (cache && weight <= limit) {
+            while (cacheBytes + weight > limit && !rawCache.isEmpty()) {
+                var eldest = rawCache.entrySet().iterator(); var entry = eldest.next();
+                cacheBytes -= 2L * entry.getValue().length(); eldest.remove();
+            }
+            rawCache.put(path,raw); cacheBytes += weight;
+        }
+        return raw;
+    }
     public SourcePreparation(Options options) { this.options = options; }
     public List<Token> prepare(Path source, ScanResult result) throws IOException {
-        return expand(source.toRealPath(), List.of(), new HashSet<>(), result);
+        return expand(source.toRealPath(), List.of(), new HashSet<>(), new Budget(), result);
     }
     private record Replacement(List<Token> from, List<Token> to) {}
-    private List<Token> expand(Path path, List<Replacement> replacements, Set<Path> active, ScanResult result) throws IOException {
+    private List<Token> expand(Path path, List<Replacement> replacements, Set<Path> active, Budget budget, ScanResult result) throws IOException {
+        if (active.size() >= options.maxIncludeDepth) { result.partial("Include depth budget exceeded at " + path.getFileName()); result.programResolutionIncomplete=true; return List.of(); }
+        long size=Files.size(path);
+        if (size > options.sourceBudget()-budget.bytes) throw new IOException("Source/expansion byte budget exceeded: " + options.sourceBudget());
+        budget.bytes += size;
         if (!active.add(path)) { result.partial("Include cycle: " + path.getFileName()); return List.of(); }
         try {
-            List<Token> tokens = replace(Lexer.lex(Normalizer.normalize(Files.readString(path, options.charset), options.format, result)), replacements);
+            List<Token> tokens = replace(Lexer.lex(Normalizer.normalize(read(path, active.size() > 1), options.format, result)), replacements);
             List<Token> out = new ArrayList<>(); boolean exec = false;
             for (int i = 0; i < tokens.size(); i++) {
                 Token t = tokens.get(i);
@@ -29,7 +49,8 @@ public final class SourcePreparation {
                         Path include=find(member.value(),roots,path.getParent());
                         if(include==null) result.partial("SQL INCLUDE not found: "+member.value());
                         else try {
-                            String raw=Files.readString(include,options.charset);
+                            if(Files.size(include)>options.sourceBudget()-budget.bytes) throw new IOException("SQL include byte budget exceeded");
+                            String raw=read(include.toRealPath(),true);
                             List<Token> content=Lexer.lex(Normalizer.normalize(raw,options.format,result));
                             boolean declared=false;
                             for(int j=0;j+2<content.size();j++) if(content.get(j).is("DECLARE")) {
@@ -38,8 +59,8 @@ public final class SourcePreparation {
                             boolean configured=false;
                             for(Path d : options.dclgenDirs) if(include.toRealPath().startsWith(d.toRealPath())) configured=true;
                             if(declared || configured) result.dclgens.add(member.upper());
-                            out.addAll(expand(include.toRealPath(),List.of(),active,result));
-                        } catch(IOException e) { result.partial("SQL INCLUDE read failed: "+member.value()); }
+                            out.addAll(expand(include.toRealPath(),List.of(),active,budget,result));
+                        } catch(IOException e) { result.partial("SQL INCLUDE read failed: "+member.value()+": "+e.getMessage()); }
                     }
                     i=end; continue;
                 }
@@ -54,8 +75,8 @@ public final class SourcePreparation {
                     List<Replacement> rules = replacements(tokens.subList(i+1, end), result);
                     Path copy = find(member.value(), options.copyDirs, path.getParent());
                     if (copy == null) result.partial("COPY not found: " + member.value());
-                    else try { out.addAll(expand(copy.toRealPath(), rules, active, result)); }
-                    catch (IOException e) { result.partial("COPY read failed: " + member.value()); }
+                    else try { out.addAll(expand(copy.toRealPath(), rules, active, budget, result)); }
+                    catch (IOException e) { result.partial("COPY read failed: " + member.value()+": "+e.getMessage()); }
                     i = end;
                 } else out.add(t);
             }

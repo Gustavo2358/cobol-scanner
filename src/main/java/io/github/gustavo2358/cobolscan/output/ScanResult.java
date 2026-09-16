@@ -5,6 +5,7 @@ public final class ScanResult {
     public final SortedSet<String> programs = new TreeSet<>(), externalFileNames = new TreeSet<>(),
         tables = new TreeSet<>(), copybooks = new TreeSet<>(), sqlIncludes = new TreeSet<>(), dclgens = new TreeSet<>();
     public final List<String> diagnostics = new ArrayList<>();
+    public long bytes, loc, preparationNanos, scanNanos, resolutionNanos, totalNanos;
     public boolean programResolutionIncomplete;
     public String scanStatus = "OK";
     public ScanResult(String source) { this.source = source; }

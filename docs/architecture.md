@@ -31,3 +31,12 @@ necessário nos sinks do recorte qualificado. Não calculamos padding/truncament
 Referências de semântica consultadas:
 - [IBM — STRING](https://www.ibm.com/docs/en/cobol-aix/5.1.0?topic=statements-string-statement)
 - [IBM — continuation lines](https://www.ibm.com/docs/en/cobol-aix/5.1.0?topic=b-continuation-lines)
+
+W7: concorrência somente entre fontes; até 2 × workers de resultados/futuros em voo.
+Emissão segue caminhos ordenados, independentemente da ordem de término. O índice
+contém somente caminhos; o lote não retém textos/resultados de todos os programas.
+Cache LRU contém texto bruto, nunca expansão, limitado a heap/16; entradas pressupõem
+arquivos imutáveis durante a execução. JSON é substituído atomicamente ao concluir.
+O orçamento por fonte/expansão padrão é heap/(24 × workers), ajustável explicitamente.
+Excedê-lo produz ERROR na raiz ou PARTIAL no include, com diagnóstico, nunca descarte
+silencioso. Profundidade de includes e candidatos têm limites explícitos/configuráveis.
