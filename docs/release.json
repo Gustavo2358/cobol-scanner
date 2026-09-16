@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0-rc1",
+  "tag": "plan-b-backup-rc1",
+  "artifact": "target/cobol-dependency-scan.jar",
+  "bytes": 657502,
+  "sha256": "7145f1ce582bc1e2463c1e884e5e0c417e4e68e9df81a828b338596cfba20f77",
+  "minimumJava": 17,
+  "runtimeDependencies": [
+    "com.fasterxml.jackson.core:jackson-core:2.22.2 (shaded)"
+  ],
+  "localValidation": [
+    "mvn clean verify: 51 tests",
+    "Standalone directory: Java 21, exact golden JSON",
+    "Production CLI corpus: 125/125 candidates; 3 OK, 7 PARTIAL, 0 ERROR",
+    "512 MiB heap: 150000 LOC + 1000 programs, no OOM"
+  ],
+  "benchmark": "benchmark/results/release-rc1/summary.json",
+  "qualification": "qualification/results/release-rc1/summary.json",
+  "reviewStatus": "Implementation ready for review; human validation of corpus gold pending; no merge performed"
+}

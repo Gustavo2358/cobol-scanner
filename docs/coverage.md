@@ -34,7 +34,7 @@ de refmod variável não causa crash. ADD/SUBTRACT/MULTIPLY/DIVIDE, INSPECT e UN
 marcam produtores afetados como unknown. Limites de valor/candidatos são explícitos;
 concatenação explosiva não produz resultado falsamente completo.
 
-Qualificação: 45 testes incluindo gold CardDemo (10 fontes), zero miss no gold
+Qualificação: 51 testes incluindo gold CardDemo (10 fontes), zero miss no gold
 elaborado pelo agente. Aprovação humana do gold pendente. Includes indisponíveis
 mantêm sete fontes PARTIAL. Veja qualification/README.md e resultados brutos.
 

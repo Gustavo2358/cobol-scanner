@@ -1,84 +1,221 @@
 package io.github.gustavo2358.cobolscan.scan;
+
 import io.github.gustavo2358.cobolscan.fact.*;
 import java.util.*;
+
 public final class FactScanner {
-    // Statement/clause boundaries prevent unrelated words from becoming MOVE receivers.
-    public static final Set<String> BOUNDARIES=Set.of("ACCEPT","ADD","ALLOCATE","ALTER","CALL","CANCEL","CLOSE","COMPUTE","CONTINUE","DELETE","DISPLAY","DIVIDE","ELSE","END-IF","END-MOVE","END-STRING","END-CALL","END-EVALUATE","END-PERFORM","END-READ","END-WRITE","END-COMPUTE","EVALUATE","EXEC","EXIT","FREE","GOBACK","GO","IF","INITIALIZE","INSPECT","MERGE","MOVE","MULTIPLY","OPEN","PERFORM","READ","RELEASE","RETURN","REWRITE","SEARCH","SET","SORT","START","STOP","STRING","SUBTRACT","UNSTRING","WHEN","WRITE","ON","NOT","SIZE","ERROR","INVALID","AT","END","THEN","SECTION","DIVISION","USING","RETURNING","DELIMITED","WITH","POINTER","END-EXEC");
-    public ValueFacts scan(List<Token> ts) {
-        ValueFacts facts=new ValueFacts(); String declaration=null; boolean procedure=false;
-        for(int i=0;i<ts.size();i++) {
-            Token t=ts.get(i);
-            if(t.is("EXEC")) { while(i<ts.size() && !ts.get(i).is("END-EXEC")) i++; continue; }
-            if(t.is("PROCEDURE")) { procedure=true; declaration=null; }
-            if(t.is(".")) declaration=null;
-            if(!procedure && t.kind()==Token.Kind.NUMBER && i+1<ts.size() && ts.get(i+1).kind()==Token.Kind.WORD && (i==0 || ts.get(i-1).line()<t.line() || ts.get(i-1).is(".") || ts.get(i-1).is("END-EXEC"))) {
-                int level; try { level=Integer.parseInt(t.value()); } catch(NumberFormatException e) { continue; }
-                if(level>=1 && level<=49 || level==77) declaration=ts.get(i+1).upper();
-                else if(level==88 || level==66) declaration=null;
-            }
-            if((t.is("VALUE") || t.is("VALUES")) && declaration!=null) {
-                int v=i+1; if(v<ts.size() && (ts.get(v).is("IS") || ts.get(v).is("ARE"))) v++;
-                facts.add(declaration,Operands.read(ts,v).value());
-            }
-            if(t.is("REDEFINES") && declaration!=null && !declaration.equals("FILLER")) {
-                var alias=Operands.read(ts,i+1);
-                if(alias.value() instanceof Value.Ref ref) { facts.add(declaration,ref); facts.add(ref.name(),new Value.Ref(declaration)); }
-            }
-            if(t.is("STRING")) string(ts,i+1,facts);
-            if(t.is("MOVE")) {
-                var src=Operands.read(ts,i+1); int to=src.next();
-                if(to<ts.size() && ts.get(to).is("TO")) {
-                    for(int j=to+1;j<ts.size() && (isReceiver(ts.get(j)) || ts.get(j).is(","));) {
-                        if(ts.get(j).is(",")) { j++; continue; }
-                        var dest=Operands.read(ts,j); Operands.assign(facts,dest.value(),src.value()); j=dest.next();
-                    }
-                }
-            }
-            if(t.is("ACCEPT") || t.is("COMPUTE") || t.is("INITIALIZE") || t.is("SET") || t.is("INSPECT")) {
-                var dest=Operands.read(ts,i+1); Operands.assign(facts,dest.value(),new Value.Unknown(t.upper()));
-            }
-            if(t.kind()==Token.Kind.WORD && Set.of("ADD","SUBTRACT","MULTIPLY","DIVIDE","UNSTRING").contains(t.upper())) {
-                int j=i+1;
-                while(j<ts.size() && !ts.get(j).is(".") && !BOUNDARIES.contains(ts.get(j).upper())) {
-                    if(Set.of("TO","FROM","BY","INTO","GIVING","REMAINDER").contains(ts.get(j).upper())) {
-                        int k=j+1;
-                        while(k<ts.size() && isReceiver(ts.get(k)) && !Set.of("GIVING","REMAINDER","ROUNDED","TALLYING").contains(ts.get(k).upper())) {
-                            var dest=Operands.read(ts,k); Operands.assign(facts,dest.value(),new Value.Unknown(t.upper())); k=dest.next();
-                        }
-                    }
-                    j++;
-                }
-            }
-            if(t.is("READ")) {
-                int j=i+2; if(j<ts.size() && ts.get(j).is("INTO")) {
-                    var dest=Operands.read(ts,j+1); Operands.assign(facts,dest.value(),new Value.Unknown("READ INTO"));
-                }
-            }
+  // Statement/clause boundaries prevent unrelated words from becoming MOVE receivers.
+  public static final Set<String> BOUNDARIES =
+      Set.of(
+          "ACCEPT",
+          "ADD",
+          "ALLOCATE",
+          "ALTER",
+          "CALL",
+          "CANCEL",
+          "CLOSE",
+          "COMPUTE",
+          "CONTINUE",
+          "DELETE",
+          "DISPLAY",
+          "DIVIDE",
+          "ELSE",
+          "END-IF",
+          "END-MOVE",
+          "END-STRING",
+          "END-CALL",
+          "END-EVALUATE",
+          "END-PERFORM",
+          "END-READ",
+          "END-WRITE",
+          "END-COMPUTE",
+          "EVALUATE",
+          "EXEC",
+          "EXIT",
+          "FREE",
+          "GOBACK",
+          "GO",
+          "IF",
+          "INITIALIZE",
+          "INSPECT",
+          "MERGE",
+          "MOVE",
+          "MULTIPLY",
+          "OPEN",
+          "PERFORM",
+          "READ",
+          "RELEASE",
+          "RETURN",
+          "REWRITE",
+          "SEARCH",
+          "SET",
+          "SORT",
+          "START",
+          "STOP",
+          "STRING",
+          "SUBTRACT",
+          "UNSTRING",
+          "WHEN",
+          "WRITE",
+          "ON",
+          "NOT",
+          "SIZE",
+          "ERROR",
+          "INVALID",
+          "AT",
+          "END",
+          "THEN",
+          "SECTION",
+          "DIVISION",
+          "USING",
+          "RETURNING",
+          "DELIMITED",
+          "WITH",
+          "POINTER",
+          "END-EXEC");
+
+  public ValueFacts scan(List<Token> ts) {
+    ValueFacts facts = new ValueFacts();
+    String declaration = null;
+    boolean procedure = false;
+    for (int i = 0; i < ts.size(); i++) {
+      Token t = ts.get(i);
+      if (t.is("EXEC")) {
+        while (i < ts.size() && !ts.get(i).is("END-EXEC")) i++;
+        continue;
+      }
+      if (t.is("PROCEDURE")) {
+        procedure = true;
+        declaration = null;
+      }
+      if (t.is(".")) declaration = null;
+      if (!procedure
+          && t.kind() == Token.Kind.NUMBER
+          && i + 1 < ts.size()
+          && ts.get(i + 1).kind() == Token.Kind.WORD
+          && (i == 0
+              || ts.get(i - 1).line() < t.line()
+              || ts.get(i - 1).is(".")
+              || ts.get(i - 1).is("END-EXEC"))) {
+        int level;
+        try {
+          level = Integer.parseInt(t.value());
+        } catch (NumberFormatException e) {
+          continue;
         }
-        return facts;
+        if (level >= 1 && level <= 49 || level == 77) declaration = ts.get(i + 1).upper();
+        else if (level == 88 || level == 66) declaration = null;
+      }
+      if ((t.is("VALUE") || t.is("VALUES")) && declaration != null) {
+        int v = i + 1;
+        if (v < ts.size() && (ts.get(v).is("IS") || ts.get(v).is("ARE"))) v++;
+        facts.add(declaration, Operands.read(ts, v).value());
+      }
+      if (t.is("REDEFINES") && declaration != null && !declaration.equals("FILLER")) {
+        var alias = Operands.read(ts, i + 1);
+        if (alias.value() instanceof Value.Ref ref) {
+          facts.add(declaration, ref);
+          facts.add(ref.name(), new Value.Ref(declaration));
+        }
+      }
+      if (t.is("STRING")) string(ts, i + 1, facts);
+      if (t.is("MOVE")) {
+        var src = Operands.read(ts, i + 1);
+        int to = src.next();
+        if (to < ts.size() && ts.get(to).is("TO")) {
+          for (int j = to + 1; j < ts.size() && (isReceiver(ts.get(j)) || ts.get(j).is(",")); ) {
+            if (ts.get(j).is(",")) {
+              j++;
+              continue;
+            }
+            var dest = Operands.read(ts, j);
+            Operands.assign(facts, dest.value(), src.value());
+            j = dest.next();
+          }
+        }
+      }
+      if (t.is("ACCEPT")
+          || t.is("COMPUTE")
+          || t.is("INITIALIZE")
+          || t.is("SET")
+          || t.is("INSPECT")) {
+        var dest = Operands.read(ts, i + 1);
+        Operands.assign(facts, dest.value(), new Value.Unknown(t.upper()));
+      }
+      if (t.kind() == Token.Kind.WORD
+          && Set.of("ADD", "SUBTRACT", "MULTIPLY", "DIVIDE", "UNSTRING").contains(t.upper())) {
+        int j = i + 1;
+        while (j < ts.size() && !ts.get(j).is(".") && !BOUNDARIES.contains(ts.get(j).upper())) {
+          if (Set.of("TO", "FROM", "BY", "INTO", "GIVING", "REMAINDER")
+              .contains(ts.get(j).upper())) {
+            int k = j + 1;
+            while (k < ts.size()
+                && isReceiver(ts.get(k))
+                && !Set.of("GIVING", "REMAINDER", "ROUNDED", "TALLYING")
+                    .contains(ts.get(k).upper())) {
+              var dest = Operands.read(ts, k);
+              Operands.assign(facts, dest.value(), new Value.Unknown(t.upper()));
+              k = dest.next();
+            }
+          }
+          j++;
+        }
+      }
+      if (t.is("READ")) {
+        int j = i + 2;
+        if (j < ts.size() && ts.get(j).is("INTO")) {
+          var dest = Operands.read(ts, j + 1);
+          Operands.assign(facts, dest.value(), new Value.Unknown("READ INTO"));
+        }
+      }
     }
-    private void string(List<Token> ts,int start,ValueFacts facts) {
-        List<Value> parts=new ArrayList<>(); int i=start,groupStart=0;
-        while(i<ts.size() && !ts.get(i).is("INTO") && !ts.get(i).is(".") && !ts.get(i).is("END-STRING")) {
-            if(ts.get(i).is(",")) { i++; continue; }
-            if(ts.get(i).is("DELIMITED")) {
-                i++; if(i<ts.size() && ts.get(i).is("BY")) i++;
-                if(i<ts.size() && ts.get(i).is("SIZE")) i++;
-                else {
-                    var delimiter=Operands.read(ts,i); i=delimiter.next();
-                    for(int j=groupStart;j<parts.size();j++) parts.set(j,delimiter.value() instanceof Value.Literal l
-                        ? new Value.Delimited(parts.get(j),l.text()) : new Value.Unknown("Dynamic STRING delimiter"));
-                }
-                groupStart=parts.size(); continue;
-            }
-            if(BOUNDARIES.contains(ts.get(i).upper())) break;
-            var operand=Operands.read(ts,i); parts.add(operand.value()); i=operand.next();
+    return facts;
+  }
+
+  private void string(List<Token> ts, int start, ValueFacts facts) {
+    List<Value> parts = new ArrayList<>();
+    int i = start, groupStart = 0;
+    while (i < ts.size()
+        && !ts.get(i).is("INTO")
+        && !ts.get(i).is(".")
+        && !ts.get(i).is("END-STRING")) {
+      if (ts.get(i).is(",")) {
+        i++;
+        continue;
+      }
+      if (ts.get(i).is("DELIMITED")) {
+        i++;
+        if (i < ts.size() && ts.get(i).is("BY")) i++;
+        if (i < ts.size() && ts.get(i).is("SIZE")) i++;
+        else {
+          var delimiter = Operands.read(ts, i);
+          i = delimiter.next();
+          for (int j = groupStart; j < parts.size(); j++)
+            parts.set(
+                j,
+                delimiter.value() instanceof Value.Literal l
+                    ? new Value.Delimited(parts.get(j), l.text())
+                    : new Value.Unknown("Dynamic STRING delimiter"));
         }
-        if(i<ts.size() && ts.get(i).is("INTO")) {
-            var dest=Operands.read(ts,i+1); Value value=new Value.Concat(parts);
-            if(dest.next()<ts.size() && (ts.get(dest.next()).is("WITH") || ts.get(dest.next()).is("POINTER"))) value=new Value.Unknown("STRING WITH POINTER");
-            Operands.assign(facts,dest.value(),value);
-        }
+        groupStart = parts.size();
+        continue;
+      }
+      if (BOUNDARIES.contains(ts.get(i).upper())) break;
+      var operand = Operands.read(ts, i);
+      parts.add(operand.value());
+      i = operand.next();
     }
-    static boolean isReceiver(Token t) { return t.kind()==Token.Kind.WORD && !BOUNDARIES.contains(t.upper()); }
+    if (i < ts.size() && ts.get(i).is("INTO")) {
+      var dest = Operands.read(ts, i + 1);
+      Value value = new Value.Concat(parts);
+      if (dest.next() < ts.size()
+          && (ts.get(dest.next()).is("WITH") || ts.get(dest.next()).is("POINTER")))
+        value = new Value.Unknown("STRING WITH POINTER");
+      Operands.assign(facts, dest.value(), value);
+    }
+  }
+
+  static boolean isReceiver(Token t) {
+    return t.kind() == Token.Kind.WORD && !BOUNDARIES.contains(t.upper());
+  }
 }

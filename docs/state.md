@@ -1,6 +1,8 @@
-Current checkpoint: W8 release hardening complete; human gold review pending.
-Completed: W0–W8; mvn clean verify green (51 tests).
-Corpus: frozen inputs and gold; final CLI rerun follows in W9 with release JAR.
-Next: W9 release packaging, clean-directory smoke, final benchmark and PR handoff.
-Known limits: human gold acceptance and unavailable includes; see coverage.md.
-Last green commit: 3818ffa; this commit adds three pre-release regressions.
+Current checkpoint: W9 implementation complete — backup release candidate ready for review.
+Completed: W0–W9; 51 tests via mvn clean verify; standalone JAR in clean directory.
+Corpus: 10 sources, 125/125 expected candidates, 0 extras; 3 OK / 7 PARTIAL / 0 ERROR.
+Performance: final JAR, 512 MiB heap, 150k LOC and 1000 programs without OOM.
+Recoverable tags: plan-b-mvp (W5), plan-b-backup-rc1 (W9).
+Known limits: human gold validation pending; unavailable includes and declared unsupported semantics.
+Next: human review of PR #1 and gold; no merge authorized/performed.
+Last green checkpoint: plan-b-backup-rc1; artifact hash/evidence in release.json.

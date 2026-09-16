@@ -1,0 +1,43 @@
+{
+  "java": "openjdk version \"25.0.4\" 2026-07-21 LTS\nOpenJDK Runtime Environment Temurin-25.0.4+7 (build 25.0.4+7-LTS)\nOpenJDK 64-Bit Server VM Temurin-25.0.4+7 (build 25.0.4+7-LTS, mixed mode, sharing)",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+  "jarSha256": "2f90645c357c588be1946c4a2bfeff0c479032e760ca15e9be14134cbb0c45b8",
+  "runs": [
+    {
+      "name": "150k-loc",
+      "files": 1,
+      "loc": 150000,
+      "bytes": 4116602,
+      "threads": 1,
+      "heapMiB": 512,
+      "wallSeconds": 0.567,
+      "locPerSecond": 264464,
+      "peakRssKiB": 284996,
+      "phaseWorkerMilliseconds": {
+        "preparation_ms": 258.87,
+        "scan_ms": 171.631,
+        "resolution_ms": 6.146,
+        "total_ms": 436.656
+      },
+      "outputSha256": "ec80cf5c563fb13b7207552d833667ed3adaeeeaac50be2137d8bbff758adf09"
+    },
+    {
+      "name": "1000-programs",
+      "files": 1000,
+      "loc": 200000,
+      "bytes": 3486000,
+      "threads": 4,
+      "heapMiB": 512,
+      "wallSeconds": 0.569,
+      "locPerSecond": 351481,
+      "peakRssKiB": 213288,
+      "phaseWorkerMilliseconds": {
+        "preparation_ms": 1510.74,
+        "scan_ms": 191.353,
+        "resolution_ms": 50.913,
+        "total_ms": 1753.255
+      },
+      "outputSha256": "f57e9f8d971a6c3bf5850c69a5577cb4298a62683a7da243189b4a1ddd963073"
+    }
+  ]
+}

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Reproducible synthetic workload. All generated inputs/artifacts stay in this repo."""
-import csv, hashlib, json, platform, resource, subprocess, time
+import argparse, csv, hashlib, json, platform, subprocess, time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 WORK=ROOT/'benchmark/work'
-RESULT=ROOT/'benchmark/results'
+parser=argparse.ArgumentParser();parser.add_argument('--output-dir',default='benchmark/work/results');args=parser.parse_args()
+RESULT=ROOT/args.output_dir
+assert RESULT.resolve().is_relative_to(ROOT), 'Outputs must remain inside repository'
 WORK.mkdir(parents=True,exist_ok=True)
 RESULT.mkdir(parents=True,exist_ok=True)
 jar=ROOT/'target/cobol-dependency-scan.jar'

@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Verify frozen inputs, execute production JAR, measure candidates against reviewed gold."""
-import csv, hashlib, json, subprocess, time
+import argparse, csv, hashlib, json, subprocess, time
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1];Q=ROOT/'qualification';out=Q/'results';out.mkdir(exist_ok=True)
+ROOT=Path(__file__).resolve().parents[1];Q=ROOT/'qualification'
+parser=argparse.ArgumentParser();parser.add_argument('--output-dir',default='.tmp/qualification-results');args=parser.parse_args()
+out=ROOT/args.output_dir;assert out.resolve().is_relative_to(ROOT), 'Outputs must remain inside repository'
+out.mkdir(parents=True,exist_ok=True)
 for name,digest in json.loads((Q/'source-sha256.json').read_text()).items():
     assert hashlib.sha256((Q/name).read_bytes()).hexdigest()==digest,('changed source',name)
 jar=ROOT/'target/cobol-dependency-scan.jar';corpus=Q/'corpus/carddemo'

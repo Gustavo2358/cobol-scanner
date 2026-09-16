@@ -1,0 +1,8 @@
+Clean directory: plano-b/.tmp/standalone (only JAR, fixture and outputs).
+Runtime: Temurin 21.0.12+1.1.
+java -jar cobol-dependency-scan.jar --source complete.cbl --output result.json
+Exit: 0.
+cmp result.json ../../src/test/resources/fixtures/complete.json
+Exit: 0 (byte-identical golden).
+JAR SHA-256: 7145f1ce582bc1e2463c1e884e5e0c417e4e68e9df81a828b338596cfba20f77.
+All 39 imported corpus/license files remain byte-identical to the read-only Plano A origin.

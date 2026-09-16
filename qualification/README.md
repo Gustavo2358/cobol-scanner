@@ -2,7 +2,7 @@
 
 `mvn clean verify` inclui comparação de todas as categorias do corpus com `gold.json`.
 `python3 -B qualification/run.py` usa o JAR real, confere SHA-256 dos inputs e preserva
-JSON, métricas, stderr, RSS e resultados em `results/`. O corpus é uma cópia byte a byte
+JSON, métricas, stderr, RSS e resultados no diretório de saída. O corpus é uma cópia byte a byte
 somente para testes, com licença/NOTICE originais. Nenhum arquivo do Plano A foi alterado.
 
 CardDemo upstream: `59cc6c2fd7ebd7ef7925cad552a01a4b8b6e4d5e`.
@@ -36,3 +36,13 @@ Cobertura representada: CALL literal e variável, CICS, SQL estático, COPYs ani
 ASSIGN e padrões combinados. Grandes fontes e 1000 programas são evidência sintética
 em benchmark/. IMS/DLI e catálogos estão fora do produto. Não há comparação de velocidade
 com Plano A nem aprovação humana simulada.
+
+W9: o [binário final](../docs/release.json) repetiu a qualificação em **0,227 s**,
+pico RSS **109.364 KiB**, mesmo gold e mesmos 125 candidatos. Saídas imutáveis:
+[results/release-rc1](results/release-rc1/summary.json). Preflight e baseline anteriores
+permanecem preservados. Novas execuções escrevem por padrão em `.tmp/qualification-results`;
+`--output-dir` permite salvar outro conjunto dentro do repositório.
+
+A suíte final contém 51 testes; os últimos protegem vírgulas em MOVE, contextos SQL
+que não são tabelas e amplificação de COPY REPLACING. Nenhum gate de Plano A foi
+executado: o produto é independente e os outros projetos permaneceram somente leitura.

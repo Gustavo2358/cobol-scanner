@@ -11,5 +11,17 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - run: mkdir -p .tmp && mvn -B clean verify
-      - run: java -jar target/cobol-dependency-scan.jar --help
+      - run: mvn -B clean verify
+      - name: Standalone JAR in clean directory
+        run: |
+          mkdir -p .tmp/standalone
+          cp target/cobol-dependency-scan.jar .tmp/standalone/
+          cp src/test/resources/fixtures/complete.cbl .tmp/standalone/
+          cd .tmp/standalone
+          java -jar cobol-dependency-scan.jar --source complete.cbl --output result.json
+          cmp result.json ../../src/test/resources/fixtures/complete.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cobol-dependency-scan
+          path: target/cobol-dependency-scan.jar
+          retention-days: 14
