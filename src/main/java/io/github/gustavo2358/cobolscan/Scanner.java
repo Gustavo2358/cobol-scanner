@@ -6,7 +6,7 @@ public final class Scanner {
     public Scanner(Options options) { this.options = options; }
     public ScanResult scan(Path source, String label) {
         ScanResult r = new ScanResult(label);
-        try { Files.readString(source, options.charset); }
+        try { new io.github.gustavo2358.cobolscan.source.SourcePreparation(options).prepare(source, r); }
         catch (Exception e) { r.scanStatus = "ERROR"; r.programResolutionIncomplete = true; r.diagnostics.add(e.getMessage()); }
         return r;
     }

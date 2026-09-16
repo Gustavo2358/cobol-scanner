@@ -3,7 +3,7 @@
 | Construção | Estado |
 |---|---|
 | CLI, JSON schema 1, JAR | implementado W0 |
-| Normalização/COPY | planejado W1 |
+| Normalização/COPY | implementado W1; fixed/free, continuação fixed, COPY aninhado/REPLACING |
 | CALL/CICS | planejado W2 |
 | VALUE/MOVE/resolver | planejado W3 |
 | ASSIGN/SQL INCLUDE | planejado W4 |
