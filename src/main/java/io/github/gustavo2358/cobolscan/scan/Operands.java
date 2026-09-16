@@ -7,7 +7,10 @@ public final class Operands {
         if (i>=ts.size()) return new Parsed(new Value.Unknown("Missing operand"),i);
         Token t=ts.get(i);
         if (t.kind()==Token.Kind.STRING) return new Parsed(new Value.Literal(t.value()),i+1);
-        if (t.kind()==Token.Kind.WORD) return new Parsed(new Value.Ref(t.upper()),i+1);
+        if (t.is("SPACE") || t.is("SPACES")) return new Parsed(new Value.Literal(" "),i+1);
+        if (t.is("ZERO") || t.is("ZEROS") || t.is("ZEROES")) return new Parsed(new Value.Literal("0"),i+1);
+        if (t.kind()==Token.Kind.NUMBER) return new Parsed(new Value.Literal(t.value()),i+1);
+        if (t.kind()==Token.Kind.WORD && !FactScanner.BOUNDARIES.contains(t.upper())) return new Parsed(new Value.Ref(t.upper()),i+1);
         return new Parsed(new Value.Unknown("Unsupported operand: "+t.text()),i+1);
     }
 }
