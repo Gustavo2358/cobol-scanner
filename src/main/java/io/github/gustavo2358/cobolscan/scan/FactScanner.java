@@ -28,7 +28,8 @@ public final class FactScanner {
             if(t.is("MOVE")) {
                 var src=Operands.read(ts,i+1); int to=src.next();
                 if(to<ts.size() && ts.get(to).is("TO")) {
-                    for(int j=to+1;j<ts.size() && isReceiver(ts.get(j));) {
+                    for(int j=to+1;j<ts.size() && (isReceiver(ts.get(j)) || ts.get(j).is(","));) {
+                        if(ts.get(j).is(",")) { j++; continue; }
                         var dest=Operands.read(ts,j); Operands.assign(facts,dest.value(),src.value()); j=dest.next();
                     }
                 }
@@ -36,7 +37,7 @@ public final class FactScanner {
             if(t.is("ACCEPT") || t.is("COMPUTE") || t.is("INITIALIZE") || t.is("SET") || t.is("INSPECT")) {
                 var dest=Operands.read(ts,i+1); Operands.assign(facts,dest.value(),new Value.Unknown(t.upper()));
             }
-            if(Set.of("ADD","SUBTRACT","MULTIPLY","DIVIDE","UNSTRING").contains(t.upper())) {
+            if(t.kind()==Token.Kind.WORD && Set.of("ADD","SUBTRACT","MULTIPLY","DIVIDE","UNSTRING").contains(t.upper())) {
                 int j=i+1;
                 while(j<ts.size() && !ts.get(j).is(".") && !BOUNDARIES.contains(ts.get(j).upper())) {
                     if(Set.of("TO","FROM","BY","INTO","GIVING","REMAINDER").contains(ts.get(j).upper())) {

@@ -35,7 +35,7 @@ public final class SourcePreparation {
         budget.bytes += size;
         if (!active.add(path)) { result.partial("Include cycle: " + path.getFileName()); return List.of(); }
         try {
-            List<Token> tokens = replace(Lexer.lex(Normalizer.normalize(read(path, active.size() > 1), options.format, result)), replacements);
+            List<Token> tokens = replace(Lexer.lex(Normalizer.normalize(read(path, active.size() > 1), options.format, result)), replacements, budget);
             List<Token> out = new ArrayList<>(); boolean exec = false;
             for (int i = 0; i < tokens.size(); i++) {
                 Token t = tokens.get(i);
@@ -104,7 +104,7 @@ public final class SourcePreparation {
         int start = ++i[0]; while (i[0] < ts.size() && !ts.get(i[0]).is("==")) i[0]++;
         List<Token> result = ts.subList(start, i[0]); if (i[0] < ts.size()) i[0]++; return result;
     }
-    private List<Token> replace(List<Token> ts, List<Replacement> rules) {
+    private List<Token> replace(List<Token> ts, List<Replacement> rules, Budget budget) throws IOException {
         if (rules.isEmpty()) return ts; List<Token> out = new ArrayList<>();
         for (int i=0;i<ts.size();) {
             boolean matched=false;
@@ -114,12 +114,17 @@ public final class SourcePreparation {
                     Token a=ts.get(i+j), b=rule.from.get(j);
                     if (a.kind()!=b.kind() || !(a.kind()==Token.Kind.STRING ? a.value().equals(b.value()) : a.text().equalsIgnoreCase(b.text()))) { equal=false; break; }
                 }
-                if (equal) { out.addAll(rule.to); i+=rule.from.size(); matched=true; break; }
+                if (equal) {
+                    long growth=Math.max(0,renderedSize(rule.to)-renderedSize(rule.from));
+                    if(growth>options.sourceBudget()-budget.bytes) throw new IOException("COPY REPLACING expansion byte budget exceeded");
+                    budget.bytes+=growth;
+                    out.addAll(rule.to); i+=rule.from.size(); matched=true; break; }
             }
             if (!matched) out.add(ts.get(i++));
         }
         return out;
     }
+    private static long renderedSize(List<Token> tokens) { long size=0; for(Token t:tokens) size+=t.text().length()+1L; return size; }
     public static Path find(String name, List<Path> dirs, Path local) throws IOException {
         // Only direct members of explicitly supplied roots (or including file's directory).
         if (name.contains("/") || name.contains("\\") || name.equals("..")) return null;

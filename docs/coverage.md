@@ -37,3 +37,8 @@ concatenação explosiva não produz resultado falsamente completo.
 Qualificação: 45 testes incluindo gold CardDemo (10 fontes), zero miss no gold
 elaborado pelo agente. Aprovação humana do gold pendente. Includes indisponíveis
 mantêm sete fontes PARTIAL. Veja qualification/README.md e resultados brutos.
+
+Pré-release: MOVE aceita vírgulas entre receivers; SQL distingue FROM de funções
+(EXTRACT/SUBSTRING) e FOR UPDATE OF de dependências de tabela. COPY REPLACING
+contabiliza crescimento no orçamento de expansão. ReleaseRegressionTest contém
+os três casos RED→GREEN e a equivalência isolada de CALL/LINK/XCTL qualificados.
