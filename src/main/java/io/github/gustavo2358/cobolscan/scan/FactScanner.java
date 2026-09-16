@@ -33,8 +33,20 @@ public final class FactScanner {
                     }
                 }
             }
-            if(t.is("ACCEPT") || t.is("COMPUTE") || t.is("INITIALIZE") || t.is("SET")) {
+            if(t.is("ACCEPT") || t.is("COMPUTE") || t.is("INITIALIZE") || t.is("SET") || t.is("INSPECT")) {
                 var dest=Operands.read(ts,i+1); Operands.assign(facts,dest.value(),new Value.Unknown(t.upper()));
+            }
+            if(Set.of("ADD","SUBTRACT","MULTIPLY","DIVIDE","UNSTRING").contains(t.upper())) {
+                int j=i+1;
+                while(j<ts.size() && !ts.get(j).is(".") && !BOUNDARIES.contains(ts.get(j).upper())) {
+                    if(Set.of("TO","FROM","BY","INTO","GIVING","REMAINDER").contains(ts.get(j).upper())) {
+                        int k=j+1;
+                        while(k<ts.size() && isReceiver(ts.get(k)) && !Set.of("GIVING","REMAINDER","ROUNDED","TALLYING").contains(ts.get(k).upper())) {
+                            var dest=Operands.read(ts,k); Operands.assign(facts,dest.value(),new Value.Unknown(t.upper())); k=dest.next();
+                        }
+                    }
+                    j++;
+                }
             }
             if(t.is("READ")) {
                 int j=i+2; if(j<ts.size() && ts.get(j).is("INTO")) {
@@ -63,7 +75,7 @@ public final class FactScanner {
         }
         if(i<ts.size() && ts.get(i).is("INTO")) {
             var dest=Operands.read(ts,i+1); Value value=new Value.Concat(parts);
-            if(dest.next()<ts.size() && ts.get(dest.next()).is("WITH")) value=new Value.Unknown("STRING WITH POINTER");
+            if(dest.next()<ts.size() && (ts.get(dest.next()).is("WITH") || ts.get(dest.next()).is("POINTER"))) value=new Value.Unknown("STRING WITH POINTER");
             Operands.assign(facts,dest.value(),value);
         }
     }

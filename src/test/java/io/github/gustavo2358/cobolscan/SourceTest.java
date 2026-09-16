@@ -28,7 +28,7 @@ class SourceTest {
     }
     @Test void fixedAndLiteralContinuation() {
         ScanResult r=new ScanResult("fixed");
-        String n=Normalizer.normalize("000100 CALL 'ABC\r\n000200-    '00001'.\r\n000300*CALL 'NO'.\r\n", "fixed",r);
+        String n=Normalizer.normalize("000100 "+" ".repeat(56)+"CALL 'ABC\r\n000200-    '00001'.\r\n000300*CALL 'NO'.\r\n", "fixed",r);
         assertEquals("ABC00001",Lexer.lex(n).get(1).value()); assertEquals("OK",r.scanStatus);
     }
     @Test void escapesAndSqlComments() {

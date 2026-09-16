@@ -9,7 +9,7 @@ public final class Options {
     public String format = "fixed";
     public int threads = Math.min(Runtime.getRuntime().availableProcessors(), 4);
     public long maxSourceBytes;
-    public int maxCandidates = 4096, maxIncludeDepth = 128;
+    public int maxCandidates = 4096, maxIncludeDepth = 128, maxValueChars = 65536;
     public boolean help;
     public long sourceBudget() { return maxSourceBytes > 0 ? maxSourceBytes : Runtime.getRuntime().maxMemory() / (24L * threads); }
     public static Options parse(String... args) {
@@ -28,6 +28,7 @@ public final class Options {
                 case "--source-format" -> o.format = value.toLowerCase(Locale.ROOT);
                 case "--metrics" -> o.metrics = Path.of(value);
                 case "--max-source-bytes" -> o.maxSourceBytes = Long.parseLong(value);
+                case "--max-value-chars" -> o.maxValueChars = Integer.parseInt(value);
                 case "--max-candidates" -> o.maxCandidates = Integer.parseInt(value);
                 case "--max-include-depth" -> o.maxIncludeDepth = Integer.parseInt(value);
                 case "--threads" -> o.threads = Integer.parseInt(value);
@@ -37,7 +38,7 @@ public final class Options {
         if (!o.help && (o.source == null || o.output == null)) throw new IllegalArgumentException("--source and --output required");
         if (!Set.of("fixed", "free").contains(o.format)) throw new IllegalArgumentException("--source-format: fixed|free");
         if (o.threads < 1 || o.threads > 64) throw new IllegalArgumentException("--threads: 1..64");
-        if (o.maxSourceBytes < 0 || o.maxCandidates < 1 || o.maxIncludeDepth < 1 || o.maxIncludeDepth > 256) throw new IllegalArgumentException("Invalid resource budget (include depth 1..256)");
+        if (o.maxSourceBytes < 0 || o.maxCandidates < 1 || o.maxValueChars < 1 || o.maxIncludeDepth < 1 || o.maxIncludeDepth > 256) throw new IllegalArgumentException("Invalid resource budget (include depth 1..256)");
         return o;
     }
 }

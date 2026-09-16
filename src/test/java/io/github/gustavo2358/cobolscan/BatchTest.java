@@ -33,4 +33,11 @@ class BatchTest {
         var r=new io.github.gustavo2358.cobolscan.resolve.ValueResolver(facts,3).resolve(new io.github.gustavo2358.cobolscan.fact.Value.Ref("P"));
         assertEquals(3,r.values().size()); assertTrue(r.incomplete());
     }
+    @Test void exponentialTextProductionIsBounded() {
+        var f=new io.github.gustavo2358.cobolscan.fact.ValueFacts();
+        f.add("X0",new io.github.gustavo2358.cobolscan.fact.Value.Literal("A"));
+        for(int i=1;i<100;i++) f.add("X"+i,new io.github.gustavo2358.cobolscan.fact.Value.Concat(List.of(new io.github.gustavo2358.cobolscan.fact.Value.Ref("X"+(i-1)),new io.github.gustavo2358.cobolscan.fact.Value.Ref("X"+(i-1)))));
+        var r=new io.github.gustavo2358.cobolscan.resolve.ValueResolver(f,4096,1024,65536).resolve(new io.github.gustavo2358.cobolscan.fact.Value.Ref("X99"));
+        assertTrue(r.incomplete()); assertTrue(r.values().isEmpty());
+    }
 }

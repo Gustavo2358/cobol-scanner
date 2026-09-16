@@ -11,7 +11,7 @@ public final class Main {
         Path temporary=null; ExecutorService workers=null;
         try {
             Options o = Options.parse(args);
-            if(o.help) { System.out.println("COBOL Dependency Scanner\n--source FILE|DIR --output FILE [--copy-dir DIR] [--sql-include-dir DIR]\n[--dclgen-dir DIR] [--charset UTF-8] [--source-format fixed|free] [--threads N]\n[--metrics FILE.tsv] [--max-source-bytes N] [--max-candidates N] [--max-include-depth N]\nExit codes: 0 OK, 1 partial/error sources, 2 invocation/output failure."); return 0; }
+            if(o.help) { System.out.println("COBOL Dependency Scanner\n--source FILE|DIR --output FILE [--copy-dir DIR] [--sql-include-dir DIR]\n[--dclgen-dir DIR] [--charset UTF-8] [--source-format fixed|free] [--threads N]\n[--metrics FILE.tsv] [--max-source-bytes N] [--max-candidates N] [--max-include-depth N] [--max-value-chars N]\nExit codes: 0 OK, 1 partial/error sources, 2 invocation/output failure."); return 0; }
             Path source=o.source.toRealPath(), output=o.output.toAbsolutePath().normalize(); boolean directory=Files.isDirectory(source);
             List<Path> paths;
             if(directory) { try(var walk=Files.walk(source)) { paths=walk.filter(Files::isRegularFile).filter(Main::isSource).sorted().toList(); } }

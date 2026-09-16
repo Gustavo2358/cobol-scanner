@@ -20,10 +20,13 @@ public final class Scanner {
             new FileScanner().scan(tokens, r); new SqlScanner().scan(tokens, r);
             var sinks = new IslandScanner().scan(tokens, r); var facts = new FactScanner().scan(tokens);
             r.scanNanos=System.nanoTime()-phase; phase=System.nanoTime();
-            var resolver = new ValueResolver(facts,options.maxCandidates);
+            var resolver = new ValueResolver(facts,options.maxCandidates,options.maxValueChars,options.sourceBudget());
             for (var sink : sinks) {
                 var resolution = resolver.resolve(sink.target());
-                for (String value : resolution.values()) if (!value.isBlank()) r.programs.add(value.stripTrailing());
+                for (String value : resolution.values()) if (!value.isBlank()) {
+                    if(r.programs.size()<options.maxCandidates || r.programs.contains(value.stripTrailing())) r.programs.add(value.stripTrailing());
+                    else r.programResolutionIncomplete=true;
+                }
                 r.programResolutionIncomplete |= resolution.incomplete();
             }
             r.resolutionNanos=System.nanoTime()-phase;

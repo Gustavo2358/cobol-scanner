@@ -33,7 +33,10 @@ public final class Normalizer {
                     while (out.length() > 0 && out.charAt(out.length()-1) == ' ') out.setLength(out.length()-1);
                 }
             } else if (quote != 0) { result.partial("Unterminated literal before next line"); }
-            out.append(body).append('\n'); quote = quoteAfter(body, quote);
+            quote = quoteAfter(body, quote);
+            out.append(body);
+            if (fixed && quote != 0 && body.length() < 65) out.append(" ".repeat(65-body.length()));
+            out.append('\n');
         }
         return out.toString();
     }

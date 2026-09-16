@@ -27,7 +27,7 @@ public final class Operands {
             if(depth!=0) return new Parsed(new Value.Unknown("Unclosed reference"),i);
             if(colon>=0) {
                 Integer offset=colon==start+1 ? integer(ts.get(start)) : null;
-                Integer length=colon+1==i ? -1 : colon+2==i ? integer(ts.get(colon+1)) : null;
+                Integer length=colon+1==i ? Integer.valueOf(-1) : colon+2==i ? integer(ts.get(colon+1)) : null;
                 value=new Value.Slice(value,offset,length);
             }
             i++;

@@ -1,0 +1,256 @@
+{
+  "reviewStatus": "agent-reviewed; pending human validation",
+  "scope": "Available static input; supported categories only. Missing includes and runtime values remain open.",
+  "sources": [
+    {
+      "source": "CBACT01C.cbl",
+      "programs": [
+        "CEE3ABD",
+        "COBDATFT"
+      ],
+      "externalFileNames": [
+        "ACCTFILE",
+        "ARRYFILE",
+        "OUTFILE",
+        "VBRCFILE"
+      ],
+      "tables": [],
+      "copybooks": [
+        "CODATECN",
+        "CVACT01Y"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "Literal CALL/SELECT targets and COPY closure reviewed in physical source."
+    },
+    {
+      "source": "CBPAUP0C.cbl",
+      "programs": [],
+      "externalFileNames": [],
+      "tables": [],
+      "copybooks": [
+        "CIPAUDTY",
+        "CIPAUSMY"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "EXEC DLI only; IMS dependencies outside declared scope."
+    },
+    {
+      "source": "CBSTM03A.CBL",
+      "programs": [
+        "CBSTM03B",
+        "CEE3ABD"
+      ],
+      "externalFileNames": [
+        "HTMLFILE",
+        "STMTFILE"
+      ],
+      "tables": [],
+      "copybooks": [
+        "COSTM01",
+        "CUSTREC",
+        "CVACT01Y",
+        "CVACT03Y"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "Literal CALL/SELECT targets and COPY closure reviewed in physical source."
+    },
+    {
+      "source": "COACCT01.cbl",
+      "programs": [
+        "MQCLOSE",
+        "MQGET",
+        "MQOPEN",
+        "MQPUT"
+      ],
+      "externalFileNames": [],
+      "tables": [],
+      "copybooks": [
+        "CMQGMOV",
+        "CMQMDV",
+        "CMQODV",
+        "CMQPMOV",
+        "CMQTML",
+        "CMQV",
+        "CVACT01Y"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "Literal CALL/SELECT targets and COPY closure reviewed in physical source."
+    },
+    {
+      "source": "COACTUPC.cbl",
+      "programs": [
+        "COACTUPC",
+        "COMEN01C",
+        "CSUTLDTC"
+      ],
+      "externalFileNames": [],
+      "tables": [],
+      "copybooks": [
+        "COACTUP",
+        "COCOM01Y",
+        "COTTL01Y",
+        "CSDAT01Y",
+        "CSLKPCDY",
+        "CSMSG01Y",
+        "CSMSG02Y",
+        "CSSETATY",
+        "CSSTRPFY",
+        "CSUSR01Y",
+        "CSUTLDPY",
+        "CSUTLDWY",
+        "CVACT01Y",
+        "CVACT03Y",
+        "CVCRD01Y",
+        "CVCUS01Y",
+        "DFHAID",
+        "DFHBMSCA"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "LIT-MENUPGM -> CDEMO-TO-PROGRAM; LIT-THISPGM -> CDEMO-FROM-PROGRAM -> target (flow-insensitive); CALL CSUTLDTC in CSUTLDPY."
+    },
+    {
+      "source": "COCRDSLC.cbl",
+      "programs": [
+        "COCRDSLC",
+        "COMEN01C"
+      ],
+      "externalFileNames": [],
+      "tables": [],
+      "copybooks": [
+        "COCOM01Y",
+        "COCRDSL",
+        "COTTL01Y",
+        "CSDAT01Y",
+        "CSMSG01Y",
+        "CSMSG02Y",
+        "CSSTRPFY",
+        "CSUSR01Y",
+        "CVACT02Y",
+        "CVCRD01Y",
+        "CVCUS01Y",
+        "DFHAID",
+        "DFHBMSCA"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "LIT-MENUPGM and LIT-THISPGM feed target through MOVE; self candidate intentionally accepted."
+    },
+    {
+      "source": "COPAUS1C.cbl",
+      "programs": [
+        "COPAUS0C",
+        "COPAUS2C"
+      ],
+      "externalFileNames": [],
+      "tables": [],
+      "copybooks": [
+        "CIPAUDTY",
+        "CIPAUSMY",
+        "COCOM01Y",
+        "COPAU01",
+        "COTTL01Y",
+        "CSDAT01Y",
+        "CSMSG01Y",
+        "CSMSG02Y",
+        "DFHAID",
+        "DFHBMSCA"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "WS-PGM-AUTH-SMRY -> XCTL; WS-PGM-AUTH-FRAUD -> LINK. WS-PGM-AUTH-DTL does not feed these sinks."
+    },
+    {
+      "source": "COTRTLIC.cbl",
+      "programs": [
+        "COADM01C",
+        "COTRTLIC",
+        "COTRTUPC"
+      ],
+      "externalFileNames": [],
+      "tables": [
+        "CARDDEMO.TRANSACTION_TYPE"
+      ],
+      "copybooks": [
+        "COCOM01Y",
+        "COTRTLI",
+        "COTTL01Y",
+        "CSDAT01Y",
+        "CSMSG01Y",
+        "CSSTRPFY",
+        "CSUSR01Y",
+        "CVACT02Y",
+        "CVCRD01Y",
+        "DFHAID",
+        "DFHBMSCA"
+      ],
+      "sqlIncludes": [
+        "CSDB2RPY",
+        "CSDB2RWY",
+        "DCLTRTYP",
+        "SQLCA"
+      ],
+      "dclgens": [],
+      "reviewNotes": "LIT-ADMINPGM/LIT-THISPGM/LIT-ADDTPGM -> XCTL; SQL references CARDDEMO.TRANSACTION_TYPE. Includes unavailable remain names only."
+    },
+    {
+      "source": "COTRTUPC.cbl",
+      "programs": [
+        "COADM01C",
+        "COTRTUPC"
+      ],
+      "externalFileNames": [],
+      "tables": [
+        "CARDDEMO.TRANSACTION_TYPE"
+      ],
+      "copybooks": [
+        "COCOM01Y",
+        "COTRTUP",
+        "COTTL01Y",
+        "CSDAT01Y",
+        "CSMSG01Y",
+        "CSMSG02Y",
+        "CSSETATY",
+        "CSSTRPFY",
+        "CSUSR01Y",
+        "CSUTLDWY",
+        "CVCRD01Y",
+        "DFHAID",
+        "DFHBMSCA"
+      ],
+      "sqlIncludes": [
+        "DCLTRCAT",
+        "DCLTRTYP",
+        "SQLCA"
+      ],
+      "dclgens": [],
+      "reviewNotes": "LIT-ADMINPGM/LIT-THISPGM -> XCTL; SQL references CARDDEMO.TRANSACTION_TYPE. Physical COPY CSUSR01Y at line 277 and CSMSG02Y at line 274 correct omissions in the initial draft gold/provenance table."
+    },
+    {
+      "source": "COUSR01C.cbl",
+      "programs": [
+        "COADM01C",
+        "COSGN00C"
+      ],
+      "externalFileNames": [],
+      "tables": [],
+      "copybooks": [
+        "COCOM01Y",
+        "COTTL01Y",
+        "COUSR01",
+        "CSDAT01Y",
+        "CSMSG01Y",
+        "CSUSR01Y",
+        "DFHAID",
+        "DFHBMSCA"
+      ],
+      "sqlIncludes": [],
+      "dclgens": [],
+      "reviewNotes": "Literal MOVE COSGN00C and COADM01C -> CDEMO-TO-PROGRAM -> XCTL."
+    }
+  ]
+}

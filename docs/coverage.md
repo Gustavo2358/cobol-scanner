@@ -28,3 +28,12 @@ CTEs podem aparecer como candidatos. SQL dinâmico marca PARTIAL; catálogo não
 
 STRING não simula bytes remanescentes do receptor. Os valores são candidatos de
 construção textual. Não se afirma equivalência com execução COBOL.
+
+W8: continuação de literal fixed inclui os espaços até a coluna 72. Comprimento
+de refmod variável não causa crash. ADD/SUBTRACT/MULTIPLY/DIVIDE, INSPECT e UNSTRING
+marcam produtores afetados como unknown. Limites de valor/candidatos são explícitos;
+concatenação explosiva não produz resultado falsamente completo.
+
+Qualificação: 45 testes incluindo gold CardDemo (10 fontes), zero miss no gold
+elaborado pelo agente. Aprovação humana do gold pendente. Includes indisponíveis
+mantêm sete fontes PARTIAL. Veja qualification/README.md e resultados brutos.

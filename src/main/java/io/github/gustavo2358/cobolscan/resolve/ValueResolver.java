@@ -5,11 +5,16 @@ import java.util.*;
 public final class ValueResolver {
     public record Resolution(SortedSet<String> values,boolean incomplete) {}
     private final ValueFacts facts;
-    private final Map<Value,Resolution> memo=new HashMap<>();
-    private final int maxCandidates;
+    private final Map<Value,Resolution> memo=new LinkedHashMap<>();
+    private final int maxCandidates, maxValueChars;
+    private final long maxMemoBytes;
+    private long memoBytes;
     private int visitedCount;
     public ValueResolver(ValueFacts facts) { this(facts,4096); }
-    public ValueResolver(ValueFacts facts,int maxCandidates) { this.facts=facts; this.maxCandidates=maxCandidates; }
+    public ValueResolver(ValueFacts facts,int maxCandidates) { this(facts,maxCandidates,65536,8*1024*1024); }
+    public ValueResolver(ValueFacts facts,int maxCandidates,int maxValueChars,long maxMemoBytes) {
+        this.facts=facts; this.maxCandidates=maxCandidates; this.maxValueChars=maxValueChars; this.maxMemoBytes=maxMemoBytes;
+    }
     public int visitedCount() { return visitedCount; }
     private static final class Frame {
         final Value value; final List<Value> children; final List<Resolution> resolved=new ArrayList<>();
@@ -31,7 +36,7 @@ public final class ValueResolver {
             }
             Resolution result=evaluate(f); stack.pop(); active.remove(f.value);
             // A context-truncated result must never poison another sink's memo.
-            if(!f.cycle) memo.put(f.value,result);
+            if(!f.cycle) cache(f.value,result);
             if(stack.isEmpty()) return result;
             Frame parent=stack.peek(); parent.resolved.add(result); parent.cycle|=f.cycle;
         }
@@ -56,7 +61,7 @@ public final class ValueResolver {
     private Resolution evaluate(Frame f) {
         SortedSet<String> values=new TreeSet<>(); boolean incomplete=f.cycle;
         for(Resolution r:f.resolved) incomplete|=r.incomplete;
-        if(f.value instanceof Value.Literal l) values.add(l.text());
+        if(f.value instanceof Value.Literal l) { if(l.text().length()<=maxValueChars) values.add(l.text()); else incomplete=true; }
         else if(f.value instanceof Value.Unknown) incomplete=true;
         else if(f.value instanceof Value.Concat) {
             values.add("");
@@ -64,6 +69,7 @@ public final class ValueResolver {
                 SortedSet<String> next=new TreeSet<>();
                 outer: for(String prefix:values) for(String suffix:part.values) {
                     if(next.size()>=maxCandidates) { incomplete=true; break outer; }
+                    if((long)prefix.length()+suffix.length()>maxValueChars) { incomplete=true; continue; }
                     next.add(prefix+suffix);
                 }
                 values=next;
@@ -83,6 +89,14 @@ public final class ValueResolver {
             }
         }
         return new Resolution(Collections.unmodifiableSortedSet(values),incomplete || values.isEmpty());
+    }
+    private long weight(Resolution r) { long n=64; for(String v:r.values) n+=48L+2L*v.length(); return n; }
+    private void cache(Value value,Resolution result) {
+        long size=weight(result); if(size>maxMemoBytes) return;
+        while(memoBytes+size>maxMemoBytes && !memo.isEmpty()) {
+            var it=memo.entrySet().iterator(); var first=it.next(); memoBytes-=weight(first.getValue()); it.remove();
+        }
+        Resolution previous=memo.put(value,result); if(previous!=null) memoBytes-=weight(previous); memoBytes+=size;
     }
     private static Resolution empty(boolean incomplete) { return new Resolution(Collections.emptySortedSet(),incomplete); }
 }
