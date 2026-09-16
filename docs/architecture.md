@@ -25,11 +25,47 @@ preservam os conhecidos e abrem incompletude; não há fixed-point de controle.
 Evidência W6: padrões de qualificação/refmod em COACTUPC (corpus CardDemo),
 REDEFINES em COCOM01Y/CVCRD01Y e STRING em CBSTM03A/COPAUS1C;
 `HardeningTest` adiciona sinks sintéticos para provar o ganho (4 RED antes).
-Group moves e SET de condition-names ficam adiados: não foi demonstrado ganho
-necessário nos sinks do recorte qualificado. Não calculamos padding/truncamento PIC.
+As declarações fornecem somente nomes, relações grupo/campo, aliases e associação
+nível 88 → item-pai/primeiro VALUE. Não calculamos offsets, padding/truncamento PIC
+ou layout. SET condition-name TO TRUE produz o primeiro VALUE no pai, sem tornar
+VALUEs de conditions não selecionadas candidatos. SET FALSE e VALUE não resolvido
+contaminam o pai com Unknown. Escritas de grupo contaminam seus campos; escritas
+parciais/de campos contaminam os grupos que os contêm e as visões sobrepostas por
+REDEFINES. Um campo irmão independente não é um receiver da escrita.
+
+Os writers usam ilhas limitadas por statements/cláusulas, sem modelar execução.
+READ procura INTO dentro dessa ilha (incluindo NEXT/PREVIOUS RECORD e WITH NO LOCK).
+Receivers múltiplos, ROUNDED, contadores/pointers de STRING/UNSTRING e INSPECT
+TALLYING são produtores Unknown quando a transformação não é modelada. MOVE ALL e
+CORRESPONDING também são Unknown; candidatos anteriores sobrevivem flow-insensitively.
+O resolver continua sendo acionado somente pelos sinks.
+
+Comentários são tratados antes da detecção de COPY: marcadores de linha inequívocos
+antes do recorte de colunas, comment entries fixed da Identification Division no
+Normalizer, e comentários inline no lexer. Strings permanecem tokens indivisíveis.
+A tolerância a `*>` no começo da linha e a registros `000100*`/`000100/` também evita
+que a seleção fixed/free transforme esses comentários em diretivas. Isso não é
+inferência automática do formato do restante do fonte.
+
+COPY REPLACING é um contexto de expansão, herdado por todos os COPYs descendentes.
+O cache permanece de texto bruto, portanto inclusões ONE/TWO não compartilham texto
+expandido. As regras não reescrevem os próprios operandos de diretivas COPY. Uma
+regra local funciona quando não há REPLACING herdado. Duas cláusulas REPLACING na
+mesma cadeia são diagnosticadas como conflito e o membro conflitante não é expandido:
+PARTIAL/incomplete, sem inventar precedência. Esse é o limite conservador para a
+restrição documentada pelo IBM Enterprise COBOL. Orçamentos de bytes/crescimento,
+profundidade e ciclos continuam aplicáveis em cada expansão.
+
+COPY MEMBER OF/IN LIBRARY registra MEMBER e produz PARTIAL/incomplete com diagnóstico
+curto de qualifier não resolvido. Não existe contrato de library-name → diretório;
+nenhum arquivo é escolhido pela ordem de copyDirs nesse caso.
 
 Referências de semântica consultadas:
 - [IBM — STRING](https://www.ibm.com/docs/en/cobol-aix/5.1.0?topic=statements-string-statement)
+- [IBM — COPY, inclusive nesting](https://publibfp.dhe.ibm.com/epubs/pdf/igy6lr40.pdf)
+- [IBM — replacement rules](https://www.ibm.com/docs/en/cobol-zos/6.3.0?topic=statement-comparison-replacement-rules)
+- [IBM — SET condition-names](https://www.ibm.com/docs/en/cobol-zos/6.3.0?topic=statement-format-4-set-condition-names)
+- [IBM — comment entries](https://www.ibm.com/docs/en/cobol-zos/6.4?topic=division-optional-paragraphs)
 - [IBM — continuation lines](https://www.ibm.com/docs/en/cobol-aix/5.1.0?topic=b-continuation-lines)
 
 W7: concorrência somente entre fontes; até 2 × workers de resultados/futuros em voo.

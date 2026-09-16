@@ -1,0 +1,14 @@
+{
+  "schemaVersion" : 1,
+  "programs" : [ {
+    "source" : "free-comment.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "REALCPY" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : false,
+    "scanStatus" : "OK"
+  } ]
+}

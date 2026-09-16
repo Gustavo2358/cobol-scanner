@@ -1,0 +1,24 @@
+Command exited with non-zero status 1
+	Command being timed: "java -Xmx512m -jar /home/gustavo/workspace/teste-e2e/plano-b/target/cobol-dependency-scan.jar --source /home/gustavo/workspace/teste-e2e/plano-b/qualification/corpus/carddemo/cbl --copy-dir /home/gustavo/workspace/teste-e2e/plano-b/qualification/corpus/carddemo/cpy --copy-dir /home/gustavo/workspace/teste-e2e/plano-b/qualification/corpus/carddemo/cpy-bms --sql-include-dir /home/gustavo/workspace/teste-e2e/plano-b/qualification/corpus/carddemo/cpy --output /home/gustavo/workspace/teste-e2e/plano-b/qualification/results/remediation/final.json --metrics /home/gustavo/workspace/teste-e2e/plano-b/qualification/results/remediation/final.tsv"
+	User time (seconds): 1.19
+	System time (seconds): 0.13
+	Percent of CPU this job got: 515%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.25
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 128768
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 26492
+	Voluntary context switches: 1157
+	Involuntary context switches: 42
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

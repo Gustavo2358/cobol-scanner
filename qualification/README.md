@@ -37,12 +37,24 @@ ASSIGN e padrões combinados. Grandes fontes e 1000 programas são evidência si
 em benchmark/. IMS/DLI e catálogos estão fora do produto. Não há comparação de velocidade
 com Plano A nem aprovação humana simulada.
 
-W9: o [binário final](../docs/release.json) repetiu a qualificação em **0,227 s**,
+W9: o binário original do RC repetiu a qualificação em **0,227 s**,
 pico RSS **109.364 KiB**, mesmo gold e mesmos 125 candidatos. Saídas imutáveis:
 [results/release-rc1](results/release-rc1/summary.json). Preflight e baseline anteriores
 permanecem preservados. Novas execuções escrevem por padrão em `.tmp/qualification-results`;
 `--output-dir` permite salvar outro conjunto dentro do repositório.
 
-A suíte final contém 51 testes; os últimos protegem vírgulas em MOVE, contextos SQL
-que não são tabelas e amplificação de COPY REPLACING. Nenhum gate de Plano A foi
-executado: o produto é independente e os outros projetos permaneceram somente leitura.
+O [binário remediado](../docs/release.json) repete os mesmos 125/125 candidatos e
+3 OK / 7 PARTIAL / 0 ERROR, em 0,259 s e RSS de 128.768 KiB. Gold e fontes congelados
+inalterados; nenhum stub foi criado para os includes indisponíveis. Resultados:
+[results/remediation](results/remediation/summary.json). Reprodução desse conjunto:
+
+```sh
+mvn clean verify
+python3 -B qualification/run.py --output-dir .tmp/qualification-results
+python3 -B benchmark/run.py --output-dir benchmark/work/results
+```
+
+A suíte contém 108 testes, 57 novos na remediação de COPY/comentários e writers.
+[Evidências RED→GREEN e investigação dos comentários](evidence/remediation/README.md)
+preservam as falhas anteriores. O JAR passou também pelo smoke isolado em Java 21.
+Nenhum gate de Plano A foi executado: os demais projetos permaneceram somente leitura.

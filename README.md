@@ -75,7 +75,7 @@ Um literal em DISPLAY, comentário ou SQL não vira programa sem relação com u
 Atribuições em caminhos inalcançáveis ou depois do CALL continuam elegíveis por projeto.
 
 [Coverage](docs/coverage.md) é a matriz oficial. Limites deliberados incluem semântica
-de layout/PIC padding/truncamento em atribuições, group moves, SET de condition-names,
+de layout/PIC padding/truncamento em atribuições e group moves, SET condition-name TO FALSE,
 funções, refmod dinâmico, STRING WITH POINTER, bibliotecas proprietárias/GRBE/IMS,
 SQL dinâmico e catálogo DB2. CTEs podem ser table candidates. Qualificações/subscritos
 colapsam para nomes base; homônimos podem acrescentar candidatos. A ferramenta é um
@@ -86,9 +86,13 @@ Fixed format usa colunas 8–72, remove comentários `*`/`/`, inclui linhas `D` 
 conservadora e suporta continuação `-`; literais continuados incluem espaços até coluna
 72. Free format preserva linhas e comentários `*>`. `>>SOURCE ... FIXED/FREE` alterna
 formato no arquivo. Tabs na área fixa não têm expansão de colunas específica de compilador;
-formas de continuação free com `&`, comment entries e diretivas complexas não são suportadas.
+comment entries fixed da Identification Division são removidas antes de procurar COPY.
+Formas de continuação free com `&` e diretivas complexas não são suportadas.
 COPY REPLACING cobre palavras/literais e pseudo-texto exato por tokens, sem LEADING/TRAILING
-ou REPLACE global. EXEC SQL/CICS é preservado até os coletores; outras regiões são opacas.
+ou REPLACE global. O contexto é herdado por COPYs aninhados; duas cláusulas REPLACING
+na mesma cadeia abrem PARTIAL. COPY OF/IN library-name também abre PARTIAL, sem
+escolher biblioteca por ordem de diretórios. EXEC SQL/CICS é preservado até os coletores;
+outras regiões são opacas.
 
 ## Recursos e performance
 

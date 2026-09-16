@@ -117,14 +117,28 @@ public final class SourcePreparation {
         if (!exec && t.is("COPY") && i + 1 < tokens.size()) {
           Token member = tokens.get(++i);
           result.copybooks.add(member.upper());
-          int end = i + 1;
-          boolean pseudo = false;
-          while (end < tokens.size()) {
-            if (tokens.get(end).is("==")) pseudo = !pseudo;
-            if (!pseudo && tokens.get(end).is(".")) break;
-            end++;
+          int end = copyEnd(tokens, i + 1);
+          List<Token> clause = tokens.subList(i + 1, end);
+          // There is no library-name -> directory contract. Do not guess by root order.
+          if (!clause.isEmpty() && (clause.get(0).is("OF") || clause.get(0).is("IN"))) {
+            String library = clause.size() > 1 ? clause.get(1).value() : "<missing>";
+            result.partial(
+                "COPY qualifier unresolved: "
+                    + member.value()
+                    + " "
+                    + clause.get(0).upper()
+                    + " "
+                    + library);
+            i = end;
+            continue;
           }
-          List<Replacement> rules = replacements(tokens.subList(i + 1, end), result);
+          List<Replacement> local = replacements(clause, result);
+          if (!replacements.isEmpty() && !local.isEmpty()) {
+            result.partial("COPY nested REPLACING conflict: " + member.value());
+            i = end;
+            continue;
+          }
+          List<Replacement> rules = local.isEmpty() ? replacements : local;
           Path copy = find(member.value(), options.copyDirs, path.getParent());
           if (copy == null) result.partial("COPY not found: " + member.value());
           else
@@ -184,7 +198,17 @@ public final class SourcePreparation {
       throws IOException {
     if (rules.isEmpty()) return ts;
     List<Token> out = new ArrayList<>();
+    boolean exec = false;
     for (int i = 0; i < ts.size(); ) {
+      if (ts.get(i).is("EXEC")) exec = true;
+      if (ts.get(i).is("END-EXEC")) exec = false;
+      // Directives carry the replacement context; do not rewrite their own operands.
+      if (!exec && ts.get(i).is("COPY")) {
+        int end = Math.min(copyEnd(ts, i + 1) + 1, ts.size());
+        out.addAll(ts.subList(i, end));
+        i = end;
+        continue;
+      }
       boolean matched = false;
       for (Replacement rule : rules) {
         if (i + rule.from.size() > ts.size()) continue;
@@ -213,6 +237,17 @@ public final class SourcePreparation {
       if (!matched) out.add(ts.get(i++));
     }
     return out;
+  }
+
+  private static int copyEnd(List<Token> tokens, int start) {
+    boolean pseudo = false;
+    int end = start;
+    while (end < tokens.size()) {
+      if (tokens.get(end).is("==")) pseudo = !pseudo;
+      if (!pseudo && tokens.get(end).is(".")) break;
+      end++;
+    }
+    return end;
   }
 
   private static long renderedSize(List<Token> tokens) {

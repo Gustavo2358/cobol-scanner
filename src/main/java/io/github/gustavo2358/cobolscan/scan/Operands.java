@@ -61,7 +61,7 @@ public final class Operands {
 
   public static void assign(
       io.github.gustavo2358.cobolscan.fact.ValueFacts facts, Value destination, Value producer) {
-    if (destination instanceof Value.Ref ref) facts.add(ref.name(), producer);
+    if (destination instanceof Value.Ref ref) facts.write(ref.name(), producer);
     else if (destination instanceof Value.Slice slice)
       assign(facts, slice.source(), new Value.Unknown("Partial reference write"));
   }
