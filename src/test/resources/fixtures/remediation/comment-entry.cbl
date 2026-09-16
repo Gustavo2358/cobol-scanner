@@ -1,0 +1,6 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. DEMO.
+       AUTHOR.
+           COPY FAKECPY. CALL 'NOISE'.
+       DATA DIVISION.
+           COPY REALCPY.

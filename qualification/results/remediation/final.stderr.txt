@@ -1,0 +1,30 @@
+COACCT01.cbl: COPY not found: CMQGMOV
+COACCT01.cbl: COPY not found: CMQPMOV
+COACCT01.cbl: COPY not found: CMQMDV
+COACCT01.cbl: COPY not found: CMQODV
+COACCT01.cbl: COPY not found: CMQV
+COACCT01.cbl: COPY not found: CMQTML
+COACCT01.cbl: Unresolved program target, source gap or value budget/cycle
+COACTUPC.cbl: COPY not found: DFHBMSCA
+COACTUPC.cbl: COPY not found: DFHAID
+COACTUPC.cbl: Unresolved program target, source gap or value budget/cycle
+COCRDSLC.cbl: COPY not found: DFHBMSCA
+COCRDSLC.cbl: COPY not found: DFHAID
+COCRDSLC.cbl: Unresolved program target, source gap or value budget/cycle
+COPAUS1C.cbl: COPY not found: DFHAID
+COPAUS1C.cbl: COPY not found: DFHBMSCA
+COPAUS1C.cbl: Unresolved program target, source gap or value budget/cycle
+COTRTLIC.cbl: SQL INCLUDE not found: CSDB2RWY
+COTRTLIC.cbl: SQL INCLUDE not found: DCLTRTYP
+COTRTLIC.cbl: COPY not found: DFHBMSCA
+COTRTLIC.cbl: COPY not found: DFHAID
+COTRTLIC.cbl: SQL INCLUDE not found: CSDB2RPY
+COTRTLIC.cbl: Unresolved program target, source gap or value budget/cycle
+COTRTUPC.cbl: COPY not found: DFHBMSCA
+COTRTUPC.cbl: COPY not found: DFHAID
+COTRTUPC.cbl: SQL INCLUDE not found: DCLTRTYP
+COTRTUPC.cbl: SQL INCLUDE not found: DCLTRCAT
+COTRTUPC.cbl: Unresolved program target, source gap or value budget/cycle
+COUSR01C.cbl: COPY not found: DFHAID
+COUSR01C.cbl: COPY not found: DFHBMSCA
+COUSR01C.cbl: Unresolved program target, source gap or value budget/cycle

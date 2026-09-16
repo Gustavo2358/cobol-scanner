@@ -1,0 +1,104 @@
+{
+  "schemaVersion" : 1,
+  "programs" : [ {
+    "source" : "CBACT01C.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ "ACCTFILE", "ARRYFILE", "OUTFILE", "VBRCFILE" ],
+    "tables" : [ ],
+    "copybooks" : [ "CODATECN", "CVACT01Y" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  }, {
+    "source" : "CBPAUP0C.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "CIPAUDTY", "CIPAUSMY" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : false,
+    "scanStatus" : "OK"
+  }, {
+    "source" : "CBSTM03A.CBL",
+    "programs" : [ "CBSTM03B", "CEE3ABD" ],
+    "externalFileNames" : [ "HTMLFILE", "STMTFILE" ],
+    "tables" : [ ],
+    "copybooks" : [ "COSTM01", "CUSTREC", "CVACT01Y", "CVACT03Y" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : false,
+    "scanStatus" : "OK"
+  }, {
+    "source" : "COACCT01.cbl",
+    "programs" : [ "MQCLOSE", "MQGET", "MQOPEN", "MQPUT" ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "CMQGMOV", "CMQMDV", "CMQODV", "CMQPMOV", "CMQTML", "CMQV", "CVACT01Y" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "PARTIAL"
+  }, {
+    "source" : "COACTUPC.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "COACTUP", "COCOM01Y", "COTTL01Y", "CSDAT01Y", "CSLKPCDY", "CSMSG01Y", "CSMSG02Y", "CSSETATY", "CSSTRPFY", "CSUSR01Y", "CSUTLDPY", "CSUTLDWY", "CVACT01Y", "CVACT03Y", "CVCRD01Y", "CVCUS01Y", "DFHAID", "DFHBMSCA" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  }, {
+    "source" : "COCRDSLC.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "COCOM01Y", "COCRDSL", "COTTL01Y", "CSDAT01Y", "CSMSG01Y", "CSMSG02Y", "CSSTRPFY", "CSUSR01Y", "CVACT02Y", "CVCRD01Y", "CVCUS01Y", "DFHAID", "DFHBMSCA" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  }, {
+    "source" : "COPAUS1C.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "CIPAUDTY", "CIPAUSMY", "COCOM01Y", "COPAU01", "COTTL01Y", "CSDAT01Y", "CSMSG01Y", "CSMSG02Y", "DFHAID", "DFHBMSCA" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  }, {
+    "source" : "COTRTLIC.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ "CARDDEMO.TRANSACTION_TYPE" ],
+    "copybooks" : [ "COCOM01Y", "COTRTLI", "COTTL01Y", "CSDAT01Y", "CSMSG01Y", "CSSTRPFY", "CSUSR01Y", "CVACT02Y", "CVCRD01Y", "DFHAID", "DFHBMSCA" ],
+    "sqlIncludes" : [ "CSDB2RPY", "CSDB2RWY", "DCLTRTYP", "SQLCA" ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  }, {
+    "source" : "COTRTUPC.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ "CARDDEMO.TRANSACTION_TYPE" ],
+    "copybooks" : [ "COCOM01Y", "COTRTUP", "COTTL01Y", "CSDAT01Y", "CSMSG01Y", "CSMSG02Y", "CSSETATY", "CSSTRPFY", "CSUSR01Y", "CSUTLDWY", "CVCRD01Y", "DFHAID", "DFHBMSCA" ],
+    "sqlIncludes" : [ "DCLTRCAT", "DCLTRTYP", "SQLCA" ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  }, {
+    "source" : "COUSR01C.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "COCOM01Y", "COTTL01Y", "COUSR01", "CSDAT01Y", "CSMSG01Y", "CSUSR01Y", "DFHAID", "DFHBMSCA" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "ERROR"
+  } ]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion" : 1,
+  "programs" : [ {
+    "source" : "fixed-as-free.cbl",
+    "programs" : [ ],
+    "externalFileNames" : [ ],
+    "tables" : [ ],
+    "copybooks" : [ "FAKECPY", "REALCPY" ],
+    "sqlIncludes" : [ ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : true,
+    "scanStatus" : "PARTIAL"
+  } ]
+}

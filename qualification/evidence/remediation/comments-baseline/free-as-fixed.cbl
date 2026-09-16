@@ -1,0 +1,2 @@
+*>     COPY FAKECPY.
+000200     COPY REALCPY.

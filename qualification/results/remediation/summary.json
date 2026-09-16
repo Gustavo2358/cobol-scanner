@@ -1,0 +1,67 @@
+{
+  "goldReview": "agent-reviewed; pending human validation",
+  "jarSha256": "dac7ac35bd99621549968b363b5ca0b8b98d28ee851fda6029529b01b081cbe3",
+  "sources": 10,
+  "statuses": {
+    "OK": 3,
+    "PARTIAL": 7,
+    "ERROR": 0
+  },
+  "programResolutionIncompleteRate": 0.7,
+  "wallSeconds": 0.259,
+  "loc": 12186,
+  "bytes": 630809,
+  "peakRssKiB": 128768,
+  "categories": {
+    "programs": {
+      "expected": 22,
+      "returned": 22,
+      "matched": 22,
+      "recall": 1.0,
+      "precision": 1.0,
+      "candidateInflation": 1.0
+    },
+    "externalFileNames": {
+      "expected": 6,
+      "returned": 6,
+      "matched": 6,
+      "recall": 1.0,
+      "precision": 1.0,
+      "candidateInflation": 1.0
+    },
+    "tables": {
+      "expected": 2,
+      "returned": 2,
+      "matched": 2,
+      "recall": 1.0,
+      "precision": 1.0,
+      "candidateInflation": 1.0
+    },
+    "copybooks": {
+      "expected": 88,
+      "returned": 88,
+      "matched": 88,
+      "recall": 1.0,
+      "precision": 1.0,
+      "candidateInflation": 1.0
+    },
+    "sqlIncludes": {
+      "expected": 7,
+      "returned": 7,
+      "matched": 7,
+      "recall": 1.0,
+      "precision": 1.0,
+      "candidateInflation": 1.0
+    },
+    "dclgens": {
+      "expected": 0,
+      "returned": 0,
+      "matched": 0,
+      "recall": null,
+      "precision": null,
+      "candidateInflation": null
+    }
+  },
+  "misses": [],
+  "extras": []
+}

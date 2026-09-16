@@ -1,0 +1,86 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< io.github.gustavo2358:cobol-dependency-scan >-------------
+[INFO] Building cobol-dependency-scan 1.0.0-rc1
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ cobol-dependency-scan ---
+[INFO] Deleting /home/gustavo/workspace/teste-e2e/plano-b/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ cobol-dependency-scan ---
+[INFO] skip non existing resourceDirectory /home/gustavo/workspace/teste-e2e/plano-b/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ cobol-dependency-scan ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 18 source files with javac [debug release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ cobol-dependency-scan ---
+[INFO] Copying 3 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ cobol-dependency-scan ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 12 source files with javac [debug release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ cobol-dependency-scan ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running io.github.gustavo2358.cobolscan.GoldenTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.084 s -- in io.github.gustavo2358.cobolscan.GoldenTest
+[INFO] Running io.github.gustavo2358.cobolscan.ReleaseRegressionTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in io.github.gustavo2358.cobolscan.ReleaseRegressionTest
+[INFO] Running io.github.gustavo2358.cobolscan.SourceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in io.github.gustavo2358.cobolscan.SourceTest
+[INFO] Running io.github.gustavo2358.cobolscan.FoundationTest
+cobol-dependency-scan: Output must not overwrite source
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in io.github.gustavo2358.cobolscan.FoundationTest
+[INFO] Running io.github.gustavo2358.cobolscan.HardeningTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in io.github.gustavo2358.cobolscan.HardeningTest
+[INFO] Running io.github.gustavo2358.cobolscan.BatchTest
+big.cbl: IOException: Source byte budget exceeded: 100
+cobol-dependency-scan: Output must not overwrite source
+cobol-dependency-scan: Include directory does not exist: /tmp/junit-1908135558964020425/absent
+nested/bad.cbl: UncheckedIOException: java.nio.charset.MalformedInputException: Input length = 1
+nested/bad.cbl: UncheckedIOException: java.nio.charset.MalformedInputException: Input length = 1
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in io.github.gustavo2358.cobolscan.BatchTest
+[INFO] Running io.github.gustavo2358.cobolscan.SqlTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in io.github.gustavo2358.cobolscan.SqlTest
+[INFO] Running io.github.gustavo2358.cobolscan.CorpusTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.186 s -- in io.github.gustavo2358.cobolscan.CorpusTest
+[INFO] Running io.github.gustavo2358.cobolscan.ValueTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in io.github.gustavo2358.cobolscan.ValueTest
+[INFO] Running io.github.gustavo2358.cobolscan.CorpusRegressionTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in io.github.gustavo2358.cobolscan.CorpusRegressionTest
+[INFO] Running io.github.gustavo2358.cobolscan.StructuralTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in io.github.gustavo2358.cobolscan.StructuralTest
+[INFO] Running io.github.gustavo2358.cobolscan.ProgramsTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in io.github.gustavo2358.cobolscan.ProgramsTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 51, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ cobol-dependency-scan ---
+[INFO] Building jar: /home/gustavo/workspace/teste-e2e/plano-b/target/cobol-dependency-scan.jar
+[INFO] 
+[INFO] --- shade:3.6.2:shade (default) @ cobol-dependency-scan ---
+[WARNING] cobol-dependency-scan.jar, jackson-core-2.22.2.jar define 1 overlapping resource: 
+[WARNING]   - META-INF/MANIFEST.MF
+[WARNING] maven-shade-plugin has detected that some files are
+[WARNING] present in two or more JARs. When this happens, only one
+[WARNING] single version of the file is copied to the uber jar.
+[WARNING] Usually this is not harmful and you can skip these warnings,
+[WARNING] otherwise try to manually exclude artifacts based on
+[WARNING] mvn dependency:tree -Ddetail=true and the above output.
+[WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
+[INFO] Replacing original artifact with shaded artifact.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.473 s
+[INFO] Finished at: 2026-09-16T13:57:10-03:00
+[INFO] ------------------------------------------------------------------------
