@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "COBOL dependencies v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "programs"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "programs",
+          "externalFileNames",
+          "tables",
+          "copybooks",
+          "sqlIncludes",
+          "dclgens",
+          "programResolutionIncomplete",
+          "scanStatus"
+        ],
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "programs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "externalFileNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "copybooks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "sqlIncludes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "dclgens": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "programResolutionIncomplete": {
+            "type": "boolean"
+          },
+          "scanStatus": {
+            "enum": [
+              "OK",
+              "PARTIAL",
+              "ERROR"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
