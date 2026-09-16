@@ -1,5 +1,6 @@
-Current checkpoint: W4 complete.
-Completed: W0–W4; mvn clean verify green (21 tests).
-Next: W5 SQL table scanner and MVP tag.
-Known limits: unresolved includes retain names and mark PARTIAL.
-Last green commit: 04c4670; W4 is this checkpoint commit.
+Current checkpoint: W5 MVP complete.
+Completed: W0–W5; mvn clean verify green (27 tests), full JSON golden.
+Recovery tag: plan-b-mvp.
+Next: W6 hardening justified by fixtures/corpus.
+Known limits: see coverage.md; no catalog or dynamic SQL resolution.
+Last green commit: f26b97c; W5 is this checkpoint commit.

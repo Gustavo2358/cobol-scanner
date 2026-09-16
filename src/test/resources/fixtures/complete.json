@@ -1,0 +1,14 @@
+{
+  "schemaVersion" : 1,
+  "programs" : [ {
+    "source" : "complete.cbl",
+    "programs" : [ "SUB00001", "SUB00002", "SUB00003" ],
+    "externalFileNames" : [ "INPUTDD" ],
+    "tables" : [ "CAD.CLIENTE", "CAD.CONTA" ],
+    "copybooks" : [ ],
+    "sqlIncludes" : [ "SQLCA" ],
+    "dclgens" : [ ],
+    "programResolutionIncomplete" : false,
+    "scanStatus" : "OK"
+  } ]
+}
